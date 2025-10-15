@@ -16,7 +16,6 @@
       transform: translateY(-2px);
     }
 
-    /* Slideshow Background */
     .slideshow-bg {
       position: absolute;
       width: 100%;
@@ -36,7 +35,6 @@
       100% { background-image: url("https://uploads.onecompiler.io/43zbv6w82/43zeav2rz/1.jpeg"); }
     }
 
-    /* Dropdown styling */
     .dropdown:hover .dropdown-menu { display: block; }
     .dropdown-menu {
       display: none;
@@ -58,7 +56,6 @@
       color: #0284c7;
     }
 
-    /* WhatsApp Floating Button */
     .whatsapp-btn {
       position: fixed;
       bottom: 20px;
@@ -77,7 +74,6 @@
     }
     .whatsapp-btn:hover { transform: scale(1.1); }
 
-    /* Feedback Section */
     .feedback-card {
       display: flex;
       align-items: center;
@@ -93,6 +89,23 @@
       width: 64px;
       height: 64px;
       object-fit: cover;
+    }
+
+    /* Modal Styling */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal.active {
+      display: flex;
     }
   </style>
 </head>
@@ -114,13 +127,13 @@
               Services ▾
             </button>
             <div class="dropdown-menu">
-              <a href="#">Virtual Assistance</a>
-              <a href="#">Content Creation</a>
-              <a href="#">Printing Services</a>
-              <a href="#">Online Applications</a>
-              <a href="#">Social Media Management</a>
-              <a href="#">Branding & Design</a>
-              <a href="#">Cyber Services</a>
+              <a href="#" class="open-form">Virtual Assistance</a>
+              <a href="#" class="open-form">Content Creation</a>
+              <a href="#" class="open-form">Printing Services</a>
+              <a href="#" class="open-form">Online Applications</a>
+              <a href="#" class="open-form">Social Media Management</a>
+              <a href="#" class="open-form">Branding & Design</a>
+              <a href="#" class="open-form">Cyber Services</a>
             </div>
           </div>
 
@@ -143,7 +156,7 @@
     </div>
   </nav>
 
-  <!-- About Section with Slideshow Background -->
+  <!-- About Section -->
   <section id="about" class="relative py-16 bg-white mt-16 overflow-hidden">
     <div class="absolute inset-0 slideshow-bg"></div>
     <div class="relative max-w-6xl mx-auto px-6 lg:px-8 grid md:grid-cols-2 gap-10 items-center z-10">
@@ -195,7 +208,6 @@
         </div>
       </div>
 
-      <!-- Feedback Form -->
       <div class="mt-8 text-center">
         <h3 class="text-xl font-semibold mb-4 text-sky-700">Add Your Feedback</h3>
         <form id="feedbackForm" class="max-w-md mx-auto">
@@ -211,6 +223,26 @@
       </div>
     </div>
   </section>
+
+  <!-- Modal Hire Me Form -->
+  <div id="hireModal" class="modal">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-1/2 relative">
+      <button id="closeModal" class="absolute top-2 right-2 text-gray-500 hover:text-red-500 font-bold text-xl">&times;</button>
+      <h2 class="text-3xl font-bold text-sky-700 mb-4 text-center">Hire Me</h2>
+      <p class="text-gray-600 mb-6 text-center">Fill in your details and I’ll reach out as soon as possible.</p>
+      <form action="https://formsubmit.co/kennetkimutai9@gmail.com" method="POST" class="space-y-4">
+        <input type="hidden" name="_subject" value="New Hire Request from Website">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="text" name="name" placeholder="Full Name" required class="border w-full p-2 rounded-md">
+        <input type="email" name="email" placeholder="Email Address" required class="border w-full p-2 rounded-md">
+        <input type="tel" name="phone" placeholder="Phone Number" required class="border w-full p-2 rounded-md">
+        <input type="text" name="address" placeholder="Address" class="border w-full p-2 rounded-md">
+        <input type="text" name="postalcode" placeholder="Postal Code" class="border w-full p-2 rounded-md">
+        <input type="text" name="town" placeholder="Town / City" class="border w-full p-2 rounded-md">
+        <button type="submit" class="btn-primary w-full text-white py-2 rounded-md font-semibold">Submit Details</button>
+      </form>
+    </div>
+  </div>
 
   <!-- WhatsApp Button -->
   <a href="https://wa.me/254758235655" target="_blank" class="whatsapp-btn">
@@ -235,13 +267,12 @@
   <script>
     lucide.createIcons();
 
-    // Add Feedback
+    // Feedback addition
     document.getElementById("feedbackForm").addEventListener("submit", function(e) {
       e.preventDefault();
       const name = document.getElementById("name").value;
       const gender = document.getElementById("gender").value;
       const message = document.getElementById("message").value;
-
       const imgNum = Math.floor(Math.random() * 80);
       const photo = `https://randomuser.me/api/portraits/${gender}/${imgNum}.jpg`;
 
@@ -249,15 +280,30 @@
       feedbackCard.classList.add("feedback-card");
       feedbackCard.innerHTML = `
         <img src="${photo}" alt="Client">
-        <div>
-          <p class="text-gray-800 font-semibold">${name}</p>
-          <p class="text-gray-600">${message}</p>
-        </div>
+        <div><p class="text-gray-800 font-semibold">${name}</p><p class="text-gray-600">${message}</p></div>
       `;
-
       document.getElementById("feedbackContainer").appendChild(feedbackCard);
-
       document.getElementById("feedbackForm").reset();
+    });
+
+    // Modal Logic
+    const modal = document.getElementById("hireModal");
+    const closeBtn = document.getElementById("closeModal");
+    const openBtns = document.querySelectorAll(".open-form");
+
+    openBtns.forEach(btn => {
+      btn.addEventListener("click", e => {
+        e.preventDefault();
+        modal.classList.add("active");
+      });
+    });
+
+    closeBtn.addEventListener("click", () => {
+      modal.classList.remove("active");
+    });
+
+    window.addEventListener("click", e => {
+      if (e.target === modal) modal.classList.remove("active");
     });
   </script>
 </body>
